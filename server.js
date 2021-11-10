@@ -1,7 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
 const { MongoClient } = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 const port = process.env.PORT || 4000;
@@ -18,13 +16,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).send("Server Running [OK]");
 });
-
-// DEV
-
-// async function openBrowserWithApiAddress() {
-//   const { stdout, stderr } = await exec(`start http://localhost:${port}`);
-// }
-// openBrowserWithApiAddress();
 
 //LISTENING PORT
 
@@ -56,6 +47,8 @@ client.connect((err) => {
       await client.connect();
       const database = client.db("ass12");
       const haiku = database.collection("test");
+      const haiku2 = database.collection("reviews");
+      const haiku3 = database.collection("products");
 
       //GET API FOR TEST THE SERVER
 
@@ -65,29 +58,31 @@ client.connect((err) => {
         res.send(users);
       });
 
-      //   //GET API FOR REVIEWS
-      //   app.get("/reviews", async (req, res) => {
-      //     const cursor2 = haiku2.find({});
-      //     const users2 = await cursor2.toArray();
-      //     res.send(users2);
-      //   });
+      //GET API FOR PRODUCTS
 
-      //   //GET API FOR ORDERINFO
-      //   app.get("/placeorder", async (req, res) => {
-      //     const cursor3 = haiku3.find({});
-      //     const users3 = await cursor3.toArray();
-      //     res.send(users3);
-      //   });
+      app.get("/products", async (req, res) => {
+        const cursor = haiku3.find();
+        const products = await cursor.toArray();
+        res.send(products);
+      });
 
-      //GET SINGLE SERVICE
+      //GET API FOR REVIEWS
 
-      //   app.get("/services/:id", async (req, res) => {
-      //     const id = req.params.id;
-      //     console.log("[*] Getting single service id", id);
-      //     const query = { _id: ObjectId(id) };
-      //     const service = await haiku.findOne(query);
-      //     res.json(service);
-      //   });
+      app.get("/reviews", async (req, res) => {
+        const cursor = haiku2.find();
+        const reviews = await cursor.toArray();
+        res.send(reviews);
+      });
+
+      //GET SINGLE PRODUCTS
+
+      app.get("/products/:id", async (req, res) => {
+        const id = req.params.id;
+        console.log("[*] Getting single service id", id);
+        const query = { _id: ObjectId(id) };
+        const products = await haiku3.findOne(query);
+        res.json(products);
+      });
 
       //GET SINGLE ORDER INFO
 
