@@ -46,17 +46,10 @@ client.connect((err) => {
     try {
       await client.connect();
       const database = client.db("ass12");
-      const haiku = database.collection("test");
       const haiku2 = database.collection("reviews");
       const haiku3 = database.collection("products");
+      const haiku4 = database.collection("allorders");
 
-      //GET API FOR TEST THE SERVER
-
-      app.get("/test", async (req, res) => {
-        const cursor = haiku.find();
-        const users = await cursor.toArray();
-        res.send(users);
-      });
 
       //GET API FOR PRODUCTS
 
@@ -73,6 +66,13 @@ client.connect((err) => {
         const reviews = await cursor.toArray();
         res.send(reviews);
       });
+      
+          //GET API FOR ORDERINFO
+      app.get("/placeorder", async (req, res) => {
+        const cursor = haiku4.find({});
+        const allorders = await cursor.toArray();
+        res.send(allorders);
+      });
 
       //GET SINGLE PRODUCTS
 
@@ -83,44 +83,40 @@ client.connect((err) => {
         const products = await haiku3.findOne(query);
         res.json(products);
       });
+      
+        //GET SINGLE ORDER INFO
+      app.get("/placeorder/:id", async (req, res) => {
+        const id = req.params.id;
+        console.log("[*] Getting single service id", id);
+        const query = { _id: ObjectId(id) };
+        const orderInfo = await haiku4.findOne(query);
+        res.json(orderInfo);
+      });
+      
+            //POST API FOR ORDER INFO
+      app.post("/placeorder", async (req, res) => {
+        const orderInfo = req.body;
+        const result = await haiku4.insertOne(orderInfo);
+        res.json(result);
+        console.log("[*] Service uploaded to database");
+      });
+          //POST API FOR SERVICES
+      app.post("/products", async (req, res) => {
+        const serviceInfo = req.body;
+        const result = await haiku3.insertOne(serviceInfo);
+        res.json(result);
+        console.log("[*] Service uploaded to database");
+      });
+      
+            //DELETE API
+      app.delete("/placeorder/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await haiku4.deleteOne(query);
+        console.log("deleteing user with id", result);
+        res.json(result);
+      });
 
-      //GET SINGLE ORDER INFO
-
-      //   app.get("/placeorder/:id", async (req, res) => {
-      //     const id = req.params.id;
-      //     console.log("[*] Getting single service id", id);
-      //     const query = { _id: ObjectId(id) };
-      //     const orderInfo = await haiku3.findOne(query);
-      //     res.json(orderInfo);
-      //   });
-
-      //POST API FOR ORDER INFO
-
-      //   app.post("/placeorder", async (req, res) => {
-      //     const orderInfo = req.body;
-      //     const result = await haiku3.insertOne(orderInfo);
-      //     res.json(result);
-      //     console.log("[*] Service uploaded to database");
-      //   });
-
-      //POST API FOR SERVICES
-
-      //   app.post("/services", async (req, res) => {
-      //     const serviceInfo = req.body;
-      //     const result = await haiku.insertOne(serviceInfo);
-      //     res.json(result);
-      //     console.log("[*] Service uploaded to database");
-      //   });
-
-      //DELETE API
-
-      //   app.delete("/placeorder/:id", async (req, res) => {
-      //     const id = req.params.id;
-      //     const query = { _id: ObjectId(id) };
-      //     const result = await haiku3.deleteOne(query);
-      //     console.log("deleteing user with id", result);
-      //     res.json(result);
-      //   });
     } finally {
       // await client.close();
     }
