@@ -102,10 +102,17 @@ client.connect((err) => {
       });
           //POST API FOR SERVICES
       app.post("/products", async (req, res) => {
-        const serviceInfo = req.body;
-        const result = await haiku3.insertOne(serviceInfo);
+        const productInfo = req.body;
+        const result = await haiku3.insertOne(productInfo);
         res.json(result);
-        console.log("[*] Service uploaded to database");
+        console.log("[*] Product uploaded to database");
+      });
+              //POST API FOR REVIEWS
+      app.post("/reviews", async (req, res) => {
+        const reviews = req.body;
+        const result = await haiku2.insertOne(reviews);
+        res.json(result);
+        console.log("[*] Review uploaded to database");
       });
       
             //DELETE API
