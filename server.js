@@ -49,6 +49,7 @@ client.connect((err) => {
       const haiku2 = database.collection("reviews");
       const haiku3 = database.collection("products");
       const haiku4 = database.collection("allorders");
+      const haiku5 = database.collection("users");
 
 
       //GET API FOR PRODUCTS
@@ -72,6 +73,13 @@ client.connect((err) => {
         const cursor = haiku4.find({});
         const allorders = await cursor.toArray();
         res.send(allorders);
+      });
+      
+             //GET API FOR USERS
+      app.get("/users", async (req, res) => {
+        const cursor = haiku5.find({});
+        const users = await cursor.toArray();
+        res.send(users);
       });
 
       //GET SINGLE PRODUCTS
@@ -113,6 +121,14 @@ client.connect((err) => {
         const result = await haiku2.insertOne(reviews);
         res.json(result);
         console.log("[*] Review uploaded to database");
+      });
+      
+                 //POST API FOR USERS
+      app.post("/users", async (req, res) => {
+        const users = req.body;
+        const result = await haiku5.insertOne(users);
+        res.json(result);
+        console.log("[*] User uploaded to database");
       });
       
             //DELETE API
