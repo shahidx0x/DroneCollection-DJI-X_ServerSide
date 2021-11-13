@@ -102,7 +102,7 @@ client.connect((err) => {
 
       //GET API FOR ADMIN CHECK
 
-      app.get("/user/:email", async (req, res) => {
+      app.get("/users/:email", async (req, res) => {
         const email = req.params.email;
         const query = { email: email };
         const user = await haiku5.findOne(query);
