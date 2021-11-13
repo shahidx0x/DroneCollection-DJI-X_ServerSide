@@ -140,6 +140,14 @@ client.connect((err) => {
         const result = await haiku5.updateOne(filter, update, option);
       });
 
+      // PUT API FOR ADMIN
+      app.put("/users/admin", async (req, res) => {
+        const user = req.body;
+        const filter = { email: user.email };
+        const update = { $set: { role: "admin" } };
+        const result = await haiku5.updateOne(filter, update);
+        req.json(result);
+      });
       //DELETE API
       app.delete("/placeorder/:id", async (req, res) => {
         const id = req.params.id;
