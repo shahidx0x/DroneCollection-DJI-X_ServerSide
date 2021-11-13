@@ -91,6 +91,16 @@ client.connect((err) => {
         res.json(products);
       });
 
+      //GET SINGLE REVIEW
+
+      app.get("/reviews/:id", async (req, res) => {
+        const id = req.params.id;
+        console.log("[*] Getting single reviews id", id);
+        const query = { _id: ObjectId(id) };
+        const products = await haiku2.findOne(query);
+        res.json(products);
+      });
+
       //GET SINGLE ORDER INFO
       app.get("/placeorder/:id", async (req, res) => {
         const id = req.params.id;
@@ -175,6 +185,14 @@ client.connect((err) => {
         const query = { _id: ObjectId(id) };
         const result = await haiku3.deleteOne(query);
         console.log("deleteing user with id", result);
+        res.json(result);
+      });
+      //DELETE API FOR ADMIN REVIEWS
+      app.delete("/reviews/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await haiku2.deleteOne(query);
+        console.log("deleteing user review with id", result);
         res.json(result);
       });
     } finally {
