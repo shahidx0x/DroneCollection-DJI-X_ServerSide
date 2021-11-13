@@ -106,7 +106,7 @@ client.connect((err) => {
         const email = req.params.email;
         const query = { email: email };
         const user = await haiku5.findOne(query);
-        const isAdmin = false;
+        let isAdmin = false;
         if (user?.role === "admin") {
           isAdmin = true;
         }
