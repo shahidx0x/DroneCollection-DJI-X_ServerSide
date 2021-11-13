@@ -100,6 +100,19 @@ client.connect((err) => {
         res.json(orderInfo);
       });
 
+      //GET API FOR ADMIN CHECK
+
+      app.get("/user/:email", async (req, res) => {
+        const email = req.params.email;
+        const query = { email: email };
+        const user = await haiku5.findOne(query);
+        const isAdmin = false;
+        if (user?.role === "admin") {
+          isAdmin = true;
+        }
+        res.json({ admin: isAdmin });
+      });
+
       //POST API FOR ORDER INFO
       app.post("/placeorder", async (req, res) => {
         const orderInfo = req.body;
