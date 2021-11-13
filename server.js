@@ -51,7 +51,6 @@ client.connect((err) => {
       const haiku4 = database.collection("allorders");
       const haiku5 = database.collection("users");
 
-
       //GET API FOR PRODUCTS
 
       app.get("/products", async (req, res) => {
@@ -67,15 +66,15 @@ client.connect((err) => {
         const reviews = await cursor.toArray();
         res.send(reviews);
       });
-      
-          //GET API FOR ORDERINFO
+
+      //GET API FOR ORDERINFO
       app.get("/placeorder", async (req, res) => {
         const cursor = haiku4.find({});
         const allorders = await cursor.toArray();
         res.send(allorders);
       });
-      
-             //GET API FOR USERS
+
+      //GET API FOR USERS
       app.get("/users", async (req, res) => {
         const cursor = haiku5.find({});
         const users = await cursor.toArray();
@@ -91,8 +90,8 @@ client.connect((err) => {
         const products = await haiku3.findOne(query);
         res.json(products);
       });
-      
-        //GET SINGLE ORDER INFO
+
+      //GET SINGLE ORDER INFO
       app.get("/placeorder/:id", async (req, res) => {
         const id = req.params.id;
         console.log("[*] Getting single service id", id);
@@ -100,38 +99,48 @@ client.connect((err) => {
         const orderInfo = await haiku4.findOne(query);
         res.json(orderInfo);
       });
-      
-            //POST API FOR ORDER INFO
+
+      //POST API FOR ORDER INFO
       app.post("/placeorder", async (req, res) => {
         const orderInfo = req.body;
         const result = await haiku4.insertOne(orderInfo);
         res.json(result);
         console.log("[*] Service uploaded to database");
       });
-          //POST API FOR SERVICES
+      //POST API FOR SERVICES
       app.post("/products", async (req, res) => {
         const productInfo = req.body;
         const result = await haiku3.insertOne(productInfo);
         res.json(result);
         console.log("[*] Product uploaded to database");
       });
-              //POST API FOR REVIEWS
+      //POST API FOR REVIEWS
       app.post("/reviews", async (req, res) => {
         const reviews = req.body;
         const result = await haiku2.insertOne(reviews);
         res.json(result);
         console.log("[*] Review uploaded to database");
       });
-      
-                 //POST API FOR USERS
+
+      //POST API FOR USERS
       app.post("/users", async (req, res) => {
         const users = req.body;
         const result = await haiku5.insertOne(users);
         res.json(result);
         console.log("[*] User uploaded to database");
       });
-      
-            //DELETE API
+
+      //PUT API FOR USERS
+
+      app.put("/users", async (req, res) => {
+        const user = req.body;
+        const filter = { email: user.email };
+        const option = { upsert: true };
+        const update = { $set: user };
+        const result = await haiku5.updateOne(filter, update, option);
+      });
+
+      //DELETE API
       app.delete("/placeorder/:id", async (req, res) => {
         const id = req.params.id;
         const query = { _id: ObjectId(id) };
@@ -139,7 +148,6 @@ client.connect((err) => {
         console.log("deleteing user with id", result);
         res.json(result);
       });
-
     } finally {
       // await client.close();
     }
